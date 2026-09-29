@@ -1,0 +1,479 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Panel de Acceso</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:           #16161a;
+  --panel:        #26262d;
+  --panel-edge:   #3a3a44;
+  --display-slot: #1c1c22;
+  --digit-fg:     #e2e2e8;
+  --pad-btn:      #2e2e36;
+  --pad-hover:    #3a3a44;
+  --pad-active:   #48484f;
+  --pad-border:   #44444e;
+  --green:        #2ecc71;
+  --green-dk:     #1e8449;
+  --green-bg:     rgba(46,204,113,.18);
+  --green-glow:   rgba(46,204,113,.28);
+  --yellow:       #f1c40f;
+  --yellow-bg:    rgba(241,196,15,.18);
+  --red:          #e74c3c;
+  --amber:        #e6ac2d;
+  --muted:        #75757f;
+  --screw:        #44444e;
+  color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--digit-fg);
+  font-family: 'Rajdhani', system-ui, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-inline: 16px;
+  padding-block: 16px;
+  padding-top: calc(16px + env(safe-area-inset-top, 0px));
+  padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+}
+
+.app { width: 100%; max-width: 360px; display: flex; flex-direction: column; gap: 12px; }
+
+/* ── Panel ── */
+.panel {
+  background: var(--panel);
+  border: 2px solid var(--panel-edge);
+  border-radius: 14px;
+  padding: 20px 18px 22px;
+  position: relative;
+  box-shadow: 0 8px 32px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.05);
+}
+
+.stripe {
+  position: absolute;
+  top: -2px; left: -2px; right: -2px; height: 7px;
+  background: repeating-linear-gradient(-45deg, var(--amber) 0, var(--amber) 6px, #111 6px, #111 12px);
+  border-radius: 14px 14px 0 0;
+}
+
+.screw {
+  position: absolute; width: 11px; height: 11px;
+  background: radial-gradient(circle at 35% 35%, #666, var(--screw));
+  border-radius: 50%; border: 1px solid #333;
+  box-shadow: inset 1px 1px 2px rgba(0,0,0,.6);
+}
+.screw::after {
+  content: ''; position: absolute; inset: 50% 15% auto;
+  transform: translateY(-50%) rotate(45deg); height: 1px; background: #2a2a30;
+}
+.s-tl { top:9px; left:9px; } .s-tr { top:9px; right:9px; }
+.s-bl { bottom:9px; left:9px; } .s-br { bottom:9px; right:9px; }
+
+/* ── Top bar ── */
+.top-bar {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 8px; margin-bottom: 18px;
+}
+.panel-label { font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--muted); }
+
+.cfg-btn {
+  background: none; border: 1px solid var(--panel-edge); color: var(--muted);
+  font-family: inherit; font-size: 10px; font-weight: 600; letter-spacing: 1.5px;
+  text-transform: uppercase; padding: 4px 9px; border-radius: 4px; cursor: pointer;
+  transition: color .15s, border-color .15s;
+}
+.cfg-btn:hover { color: var(--digit-fg); border-color: var(--digit-fg); }
+
+/* ── Config drawer ── */
+.cfg-drawer {
+  background: #0e0e12; border: 1px solid var(--panel-edge);
+  border-radius: 8px; padding: 12px; margin-bottom: 16px;
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+.cfg-lbl { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+.cfg-drawer select {
+  background: var(--display-slot); color: var(--digit-fg);
+  border: 1px solid var(--panel-edge); border-radius: 5px;
+  padding: 6px 9px; font-family: 'Share Tech Mono', monospace; font-size: 14px;
+}
+
+/* ── Digit display ── */
+.display { display: flex; justify-content: center; gap: 7px; margin-bottom: 22px; }
+
+.dbox {
+  flex: 1; max-width: 54px; aspect-ratio: 1;
+  background: var(--display-slot); border: 1px solid #2a2a32; border-radius: 5px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Share Tech Mono', monospace; font-size: 24px;
+  color: var(--digit-fg); font-variant-numeric: tabular-nums;
+  box-shadow: inset 0 2px 5px rgba(0,0,0,.6);
+  transition: border-color .1s, box-shadow .1s;
+  cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent;
+}
+.dbox.filled { border-color: #3c3c48; }
+.dbox.sel {
+  border-color: var(--green);
+  box-shadow: inset 0 2px 5px rgba(0,0,0,.6), 0 0 9px var(--green-glow);
+}
+.dbox.sel.empty::after {
+  content: '|'; color: var(--green); font-size: 20px;
+  animation: blink .8s step-end infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+/* ── Numpad ── */
+.numpad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; margin-bottom: 14px; }
+
+.key {
+  background: var(--pad-btn); border: 1px solid var(--pad-border); border-radius: 9px;
+  color: var(--digit-fg); font-family: 'Rajdhani', sans-serif; font-size: 21px; font-weight: 600;
+  padding: 15px 8px; cursor: pointer; text-align: center;
+  user-select: none; -webkit-tap-highlight-color: transparent;
+  box-shadow: 0 3px 0 rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.07);
+  transition: background .08s, transform .05s, box-shadow .05s, opacity .1s;
+}
+.key:hover  { background: var(--pad-hover); }
+.key:active { background: var(--pad-active); transform: translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,.45); }
+.key.k-clr { font-size:13px; font-weight:700; letter-spacing:1px; color:var(--red); border-color:rgba(231,76,60,.3); }
+.key.k-del { font-size:19px; color:var(--amber); border-color:rgba(230,172,45,.2); }
+.key.used  { opacity: .25; cursor: not-allowed; pointer-events: none; }
+
+/* ── Try button ── */
+.try-btn {
+  width: 100%; background: var(--green-dk); border: 2px solid var(--green); border-radius: 8px;
+  color: #fff; font-family: 'Rajdhani', sans-serif; font-size: 14px; font-weight: 700;
+  letter-spacing: 2.5px; text-transform: uppercase; padding: 14px; cursor: pointer;
+  box-shadow: 0 0 14px var(--green-glow); transition: background .15s, box-shadow .15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.try-btn:hover { background: var(--green); box-shadow: 0 0 22px var(--green-glow); }
+
+/* ── History panel ── */
+.history-panel {
+  background: var(--panel); border: 2px solid var(--panel-edge); border-radius: 14px;
+  padding: 16px 18px 18px; position: relative;
+  box-shadow: 0 8px 32px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.05);
+}
+
+.hist-header {
+  display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;
+}
+.hist-title { font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--muted); }
+.hist-clear {
+  background: none; border: 1px solid var(--panel-edge); color: var(--muted);
+  font-family: inherit; font-size: 9px; font-weight: 600; letter-spacing: 1.5px;
+  text-transform: uppercase; padding: 3px 8px; border-radius: 4px; cursor: pointer;
+  transition: color .15s, border-color .15s;
+}
+.hist-clear:hover { color: var(--red); border-color: var(--red); }
+
+.hist-empty {
+  text-align: center; font-size: 11px; color: var(--muted); letter-spacing: 1px;
+  text-transform: uppercase; padding: 16px 0;
+}
+
+.hist-hint {
+  text-align: center; font-size: 9px; color: var(--muted); letter-spacing: 1px;
+  text-transform: uppercase; margin-bottom: 12px;
+}
+
+/* history rows */
+.hist-list { display: flex; flex-direction: column; gap: 10px; }
+
+.hist-row {
+  display: flex; gap: 6px; align-items: center;
+}
+
+.hist-num {
+  font-size: 10px; color: var(--muted); font-family: 'Share Tech Mono', monospace;
+  min-width: 18px; text-align: right; flex-shrink: 0;
+}
+
+.hist-digits { display: flex; gap: 6px; flex: 1; }
+
+.hbox {
+  flex: 1; aspect-ratio: 1; max-width: 46px;
+  background: var(--display-slot); border: 1px solid #2a2a32; border-radius: 5px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Share Tech Mono', monospace; font-size: 20px;
+  font-variant-numeric: tabular-nums; color: var(--digit-fg);
+  cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent;
+  transition: background .15s, border-color .15s, color .15s;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,.5);
+}
+
+/* color states: 0=default, 1=yellow, 2=green */
+.hbox[data-state="1"] {
+  background: var(--yellow-bg);
+  border-color: var(--yellow);
+  color: var(--yellow);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,.4), 0 0 7px rgba(241,196,15,.25);
+}
+.hbox[data-state="2"] {
+  background: var(--green-bg);
+  border-color: var(--green);
+  color: var(--green);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,.4), 0 0 7px var(--green-glow);
+}
+
+/* legend */
+.legend {
+  display: flex; gap: 14px; justify-content: center; margin-top: 14px;
+  padding-top: 12px; border-top: 1px solid var(--panel-edge);
+}
+.leg-item { display: flex; align-items: center; gap: 5px; }
+.leg-dot {
+  width: 10px; height: 10px; border-radius: 2px; border: 1px solid;
+}
+.leg-dot.y { background: var(--yellow-bg); border-color: var(--yellow); }
+.leg-dot.g { background: var(--green-bg);  border-color: var(--green);  }
+.leg-lbl { font-size: 9px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Keypad panel -->
+  <div class="panel">
+    <div class="stripe"></div>
+    <div class="screw s-tl"></div><div class="screw s-tr"></div>
+    <div class="screw s-bl"></div><div class="screw s-br"></div>
+
+    <div class="top-bar">
+      <span class="panel-label">Acceso Seguro</span>
+      <button class="cfg-btn" id="cfgToggle" onclick="toggleCfg()">⚙ Dígitos</button>
+    </div>
+
+    <div class="cfg-drawer" id="cfgDrawer" hidden>
+      <span class="cfg-lbl">Cantidad de dígitos</span>
+      <select id="selDigits" onchange="newGame()">
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6" selected>6</option>
+      </select>
+    </div>
+
+    <div class="display" id="display"></div>
+
+    <div class="numpad">
+      <button class="key" data-digit="1" onclick="kp('1')">1</button>
+      <button class="key" data-digit="2" onclick="kp('2')">2</button>
+      <button class="key" data-digit="3" onclick="kp('3')">3</button>
+      <button class="key" data-digit="4" onclick="kp('4')">4</button>
+      <button class="key" data-digit="5" onclick="kp('5')">5</button>
+      <button class="key" data-digit="6" onclick="kp('6')">6</button>
+      <button class="key" data-digit="7" onclick="kp('7')">7</button>
+      <button class="key" data-digit="8" onclick="kp('8')">8</button>
+      <button class="key" data-digit="9" onclick="kp('9')">9</button>
+      <button class="key k-clr" onclick="clrAll()">CLR</button>
+      <button class="key" data-digit="0" onclick="kp('0')">0</button>
+      <button class="key k-del" onclick="delAt()">←</button>
+    </div>
+
+    <button class="try-btn" onclick="submitSeq()">Probar secuencia</button>
+  </div>
+
+  <!-- History panel -->
+  <div class="history-panel">
+    <div class="hist-header">
+      <span class="hist-title">Historial</span>
+      <button class="hist-clear" onclick="clearHistory()">✕ Limpiar</button>
+    </div>
+
+    <div id="histEmpty" class="hist-empty">Sin intentos aún</div>
+    <div id="histHint"  class="hist-hint" hidden>Toca un número para marcarlo</div>
+    <div class="hist-list" id="histList"></div>
+
+    <div class="legend" id="legend" hidden>
+      <div class="leg-item"><div class="leg-dot y"></div><span class="leg-lbl">Dígito en posición incorrecta</span></div>
+      <div class="leg-item"><div class="leg-dot g"></div><span class="leg-lbl">Posición correcta</span></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── State ─────────────────────────────────────────────
+let cells    = [];
+let cursor   = 0;
+let digitLen = 6;
+let cfgOpen  = false;
+let history  = []; // [{digits: ['1','2',...], states: [0,1,2,...]}]
+
+// ── Init ──────────────────────────────────────────────
+function newGame() {
+  digitLen = parseInt(document.getElementById('selDigits').value) || 6;
+  cells  = Array(digitLen).fill(null);
+  cursor = 0;
+  renderDisplay();
+}
+
+// ── Display ───────────────────────────────────────────
+function renderDisplay() {
+  const el = document.getElementById('display');
+  el.innerHTML = '';
+  for (let i = 0; i < digitLen; i++) {
+    const b = document.createElement('div');
+    const isEmpty = cells[i] === null;
+    const isSel   = i === cursor;
+    b.className = 'dbox' + (isEmpty ? ' empty' : ' filled') + (isSel ? ' sel' : '');
+    if (!isEmpty) b.textContent = cells[i];
+    b.addEventListener('click', () => { cursor = i; renderDisplay(); });
+    el.appendChild(b);
+  }
+}
+
+// ── Keypad ────────────────────────────────────────────
+function usedDigits() {
+  return new Set(cells.filter(c => c !== null));
+}
+
+function kp(d) {
+  // block if digit already used in another box
+  const used = usedDigits();
+  if (used.has(d) && cells[cursor] !== d) return;
+
+  cells[cursor] = d;
+  let next = cursor + 1;
+  while (next < digitLen - 1 && cells[next] !== null) next++;
+  if (next < digitLen) cursor = next;
+  renderDisplay();
+  updateKeys();
+}
+
+function delAt() {
+  cells[cursor] = null;
+  renderDisplay();
+  updateKeys();
+}
+
+function clrAll() {
+  cells  = Array(digitLen).fill(null);
+  cursor = 0;
+  renderDisplay();
+  updateKeys();
+}
+
+function updateKeys() {
+  const used = usedDigits();
+  document.querySelectorAll('.key[data-digit]').forEach(btn => {
+    const d = btn.dataset.digit;
+    // mark used only if it's not the digit already in the current cursor box
+    const occupiedElsewhere = used.has(d) && cells[cursor] !== d;
+    btn.classList.toggle('used', occupiedElsewhere);
+  });
+}
+
+function moveCursor(d) {
+  const n = cursor + d;
+  if (n >= 0 && n < digitLen) { cursor = n; renderDisplay(); }
+}
+
+// ── Submit → add to history ───────────────────────────
+function submitSeq() {
+  if (cells.some(c => c === null)) {
+    // flash red on empty boxes
+    document.querySelectorAll('.dbox.empty').forEach(b => {
+      b.style.borderColor = 'var(--red)';
+      setTimeout(() => b.style.borderColor = '', 500);
+    });
+    return;
+  }
+  history.unshift({ digits: [...cells], states: Array(digitLen).fill(0) });
+  cells  = Array(digitLen).fill(null);
+  cursor = 0;
+  renderDisplay();
+  renderHistory();
+}
+
+// ── History ───────────────────────────────────────────
+function cycleState(rowIdx, colIdx) {
+  const entry = history[rowIdx];
+  entry.states[colIdx] = (entry.states[colIdx] + 1) % 3;
+  renderHistory();
+}
+
+function renderHistory() {
+  const list    = document.getElementById('histList');
+  const empty   = document.getElementById('histEmpty');
+  const hint    = document.getElementById('histHint');
+  const legend  = document.getElementById('legend');
+  list.innerHTML = '';
+
+  if (history.length === 0) {
+    empty.hidden  = false;
+    hint.hidden   = true;
+    legend.hidden = true;
+    return;
+  }
+
+  empty.hidden  = true;
+  hint.hidden   = false;
+  legend.hidden = false;
+
+  history.forEach((entry, ri) => {
+    const row = document.createElement('div');
+    row.className = 'hist-row';
+
+    const num = document.createElement('span');
+    num.className = 'hist-num';
+    num.textContent = history.length - ri;
+    row.appendChild(num);
+
+    const digs = document.createElement('div');
+    digs.className = 'hist-digits';
+
+    entry.digits.forEach((d, ci) => {
+      const b = document.createElement('div');
+      b.className = 'hbox';
+      b.dataset.state = entry.states[ci];
+      b.textContent = d;
+      b.addEventListener('click', () => cycleState(ri, ci));
+      digs.appendChild(b);
+    });
+
+    row.appendChild(digs);
+    list.appendChild(row);
+  });
+}
+
+function clearHistory() {
+  history = [];
+  renderHistory();
+}
+
+// ── Config toggle ─────────────────────────────────────
+function toggleCfg() {
+  cfgOpen = !cfgOpen;
+  document.getElementById('cfgDrawer').hidden = !cfgOpen;
+  document.getElementById('cfgToggle').textContent = cfgOpen ? '✕ Cerrar' : '⚙ Dígitos';
+}
+
+// ── Keyboard ──────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'SELECT') return;
+  if (e.key >= '0' && e.key <= '9')  { kp(e.key); e.preventDefault(); }
+  else if (e.key === 'Backspace')     { delAt(); moveCursor(-1); e.preventDefault(); }
+  else if (e.key === 'Delete')        { delAt(); e.preventDefault(); }
+  else if (e.key === 'ArrowLeft')     { moveCursor(-1); e.preventDefault(); }
+  else if (e.key === 'ArrowRight')    { moveCursor(1);  e.preventDefault(); }
+  else if (e.key === 'Enter')         { submitSeq(); }
+});
+
+// ── Boot ──────────────────────────────────────────────
+newGame();
+renderHistory();
+</script>
+</body>
+</html>
+
+</body></html>
